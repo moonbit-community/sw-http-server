@@ -1,0 +1,5 @@
+- [ ] More route support
+  - [ ] Catch-all routes (404)
+  - [ ] Exception routes (500)
+- [ ] Follow RFC specifications
+- [ ] Add adapters support for different backends
