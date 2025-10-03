@@ -2,9 +2,9 @@
   "name": "ShellWen/sw_http_server",
   "version": "0.1.0",
   "deps": {
-    "ShellWen/sw_socket": "0.1.0",
-    "ShellWen/sw_router": "0.1.0",
-    "tonyfettes/encoding": "0.3.0"
+    "ShellWen/sw_socket": "0.2.0",
+    "ShellWen/sw_router": "0.2.0",
+    "tonyfettes/encoding": "0.3.7"
   },
   "readme": "README.md",
   "repository": "https://github.com/moonbit-community/sw-http-server.git",

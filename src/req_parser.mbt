@@ -6,7 +6,7 @@ priv enum HttpRequestParserPhase {
   Version
   Headers
   End
-} derive(Show, Eq)
+} derive(Eq)
 
 ///|
 priv struct HttpRequestParser {
@@ -15,7 +15,7 @@ priv struct HttpRequestParser {
   mut http_version : String?
   headers : Map[String, String]
   mut phase : HttpRequestParserPhase
-  buffer : @buffer.T
+  buffer : @buffer.Buffer
   mut current_header_name : String?
   mut is_parsing_header_name : Bool
   mut expect_ln_after_cr : Bool
@@ -42,7 +42,7 @@ fn HttpRequestParser::new() -> HttpRequestParser {
 fn HttpRequestParser::parse(
   self : HttpRequestParser,
   byte : Byte
-) -> Bool!@encoding.DecodingError {
+) -> Bool raise @encoding.DecodingError {
   match self.phase {
     HttpRequestParserPhase::Start =>
       if byte != b' ' && byte != b'\r' && byte != b'\n' {
@@ -52,7 +52,7 @@ fn HttpRequestParser::parse(
     HttpRequestParserPhase::Method =>
       if byte == b' ' {
         let data = self.buffer.to_bytes()
-        let str = @encoding.decode!(data, encoding=UTF8)
+        let str = @encoding.decode(data, encoding=UTF8)
         self.buffer.reset()
         self.http_method = Some(str)
         self.phase = HttpRequestParserPhase::Location
@@ -62,7 +62,7 @@ fn HttpRequestParser::parse(
     HttpRequestParserPhase::Location =>
       if byte == b' ' {
         let data = self.buffer.to_bytes()
-        let str = @encoding.decode!(data, encoding=UTF8)
+        let str = @encoding.decode(data, encoding=UTF8)
         self.buffer.reset()
         self.location = Some(str)
         self.phase = HttpRequestParserPhase::Version
@@ -72,7 +72,7 @@ fn HttpRequestParser::parse(
     HttpRequestParserPhase::Version =>
       if byte == b'\r' {
         let data = self.buffer.to_bytes()
-        let str = @encoding.decode!(data, encoding=UTF8)
+        let str = @encoding.decode(data, encoding=UTF8)
         self.buffer.reset()
         self.http_version = Some(str)
         self.phase = HttpRequestParserPhase::Headers
@@ -90,7 +90,7 @@ fn HttpRequestParser::parse(
             return true
           } else {
             let data = self.buffer.to_bytes()
-            let value = @encoding.decode!(data, encoding=UTF8)
+            let value = @encoding.decode(data, encoding=UTF8)
             self.buffer.reset()
             if not(self.current_header_name.is_empty()) {
               let name = self.current_header_name.unwrap()
@@ -111,7 +111,7 @@ fn HttpRequestParser::parse(
         self.buffer.write_byte(byte)
       } else if self.is_parsing_header_name && byte == b':' {
         let data = self.buffer.to_bytes()
-        let name = @encoding.decode!(data, encoding=UTF8)
+        let name = @encoding.decode(data, encoding=UTF8)
         self.current_header_name = Some(name)
         self.buffer.reset()
         self.is_parsing_header_name = false
@@ -137,14 +137,14 @@ test "HttpRequestParser" {
   let parser = HttpRequestParser::new()
   let bytes = b"GET / HTTP/1.1\r\nHost: example.com\r\nA: B\r\n\r\n"
   for byte in bytes {
-    if parser.parse!(byte) {
+    if parser.parse(byte) {
       break
     }
   }
-  assert_eq!(parser.is_complete(), true)
-  assert_eq!(parser.http_method, Some("GET"))
-  assert_eq!(parser.location, Some("/"))
-  assert_eq!(parser.http_version, Some("HTTP/1.1"))
-  assert_eq!(parser.headers.get("Host"), Some("example.com"))
-  assert_eq!(parser.headers.get("A"), Some("B"))
+  assert_eq(parser.is_complete(), true)
+  assert_eq(parser.http_method, Some("GET"))
+  assert_eq(parser.location, Some("/"))
+  assert_eq(parser.http_version, Some("HTTP/1.1"))
+  assert_eq(parser.headers.get("Host"), Some("example.com"))
+  assert_eq(parser.headers.get("A"), Some("B"))
 }
