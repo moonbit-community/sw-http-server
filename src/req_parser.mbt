@@ -41,7 +41,7 @@ fn HttpRequestParser::new() -> HttpRequestParser {
 ///|
 fn HttpRequestParser::parse(
   self : HttpRequestParser,
-  byte : Byte
+  byte : Byte,
 ) -> Bool raise @encoding.DecodingError {
   match self.phase {
     HttpRequestParserPhase::Start =>

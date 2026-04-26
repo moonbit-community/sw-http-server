@@ -1,3 +1,0 @@
-{
-  "import": ["ShellWen/sw_socket", "ShellWen/sw_router", "tonyfettes/encoding"]
-}

@@ -2,7 +2,7 @@
 fn wrapped_main() -> Unit raise {
   let server = @sw_http_server.new([])
   server.get("/", fn(req, res) {
-    let resp: Json = {
+    let resp : Json = {
       "message": "Hello, World!",
       "headers": req.headers,
       "body": req.body.to_string(),

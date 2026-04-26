@@ -1,0 +1,8 @@
+import {
+  "ShellWen/sw_http_server",
+  "tonyfettes/encoding",
+}
+
+options(
+  "is-main": true,
+)
