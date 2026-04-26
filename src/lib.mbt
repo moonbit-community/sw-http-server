@@ -23,7 +23,7 @@ enum HttpMethod {
 } derive(Eq, Show, Hash)
 
 ///|
-typealias (Request, Response) -> Unit as HttpHandler
+type HttpHandler = (Request, Response) -> Unit
 
 ///|
 struct HttpServer {
@@ -38,14 +38,14 @@ struct HttpServer {
 
 ///|
 /// (method, path, handler)
-typealias (String, String, HttpHandler) as RouteConfig
+type RouteConfig = (String, String, HttpHandler)
 
 ///|
 fn HttpServer::method_(
   self : HttpServer,
   method_ : String,
   path : String,
-  handler : HttpHandler
+  handler : HttpHandler,
 ) -> Unit raise @sw_router.AddRouteError {
   let http_method = match method_.to_upper() {
     "ALL" => HttpMethod::All
@@ -53,7 +53,7 @@ fn HttpServer::method_(
     m => HttpMethod::String(m)
   }
   let router = self.routers.get_or_init(http_method, fn() {
-    (try? {@sw_router.router([])}).unwrap()
+    (try? @sw_router.router([])).unwrap()
   })
   router.add_route(path, fn(path_params, query, fragment) {
     ((path_params, query, fragment), handler)
