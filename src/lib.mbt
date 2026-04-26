@@ -20,7 +20,20 @@ enum HttpMethod {
   String(String)
   // TODO: not supported now
   All
-} derive(Eq, Show, Hash)
+} derive(Eq, Debug, Hash)
+
+///|
+pub impl Show for HttpMethod with to_string(self : HttpMethod) -> String {
+  match self {
+    String(method_) => method_
+    All => "ALL"
+  }
+}
+
+///|
+pub impl Show for HttpMethod with output(self : HttpMethod, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 type HttpHandler = (Request, Response) -> Unit
@@ -53,7 +66,7 @@ fn HttpServer::method_(
     m => HttpMethod::String(m)
   }
   let router = self.routers.get_or_init(http_method, fn() {
-    (try? @sw_router.router([])).unwrap()
+    try! @sw_router.router([])
   })
   router.add_route(path, fn(path_params, query, fragment) {
     ((path_params, query, fragment), handler)
@@ -78,7 +91,7 @@ pub fn HttpServer::listen(
   host : String,
   port : UInt16,
 ) -> Unit raise Failure {
-  if not(self.socket.is_empty()) {
+  if self.socket is Some(_) {
     fail("Server is already listening")
   }
   let server_socket = @sw_socket.new_socket(AF_INET, SOCK_STREAM)
@@ -89,7 +102,7 @@ pub fn HttpServer::listen(
 
 ///|
 pub fn HttpServer::close(self : HttpServer) -> Unit raise {
-  if self.socket.is_empty() {
+  if self.socket is None {
     fail("Server is not listening")
   }
   let socket = self.socket.unwrap()
@@ -106,8 +119,10 @@ fn HttpServer::dispatch(
   body : Bytes,
 ) -> Response raise {
   let router = self.routers.get(method_)
-  if router.is_empty() {
-    fail("No route found for method \{method_} and path \{location}")
+  if router is None {
+    fail(
+      "No route found for method \{method_.to_string()} and path \{location}",
+    )
   }
   // DispatchError::RouteNotMatched handle 404
   // ((path_params, query, fragment), handler)
@@ -132,7 +147,7 @@ fn HttpServer::dispatch(
 
 ///|
 pub fn HttpServer::poll(self : HttpServer) -> Unit raise {
-  if self.socket.is_empty() {
+  if self.socket is None {
     fail("Server is not listening")
   }
   let socket = self.socket.unwrap()
@@ -142,7 +157,7 @@ pub fn HttpServer::poll(self : HttpServer) -> Unit raise {
   let buffer = @buffer.new(size_hint=4096)
   let mut is_parsing_header = true
   while true {
-    if not(is_parsing_header) {
+    if !is_parsing_header {
       break
     }
     let byte_received = client_socket.recv_buffer(one_byte_read_buf)
@@ -158,7 +173,7 @@ pub fn HttpServer::poll(self : HttpServer) -> Unit raise {
   }
   // Content-Length
   // TODO: error handling
-  let content_length = @strconv.parse_int64(
+  let content_length = @string.parse_int64(
     req_parser.headers.get("Content-Length").unwrap_or("0"),
   )
   let content_remaining = content_length - buffer.length().to_int64()
