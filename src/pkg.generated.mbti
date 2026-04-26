@@ -1,0 +1,69 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ShellWen/sw_http_server"
+
+import {
+  "ShellWen/sw_router",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn new(Array[(String, String, (Request, Response) -> Unit)]) -> HttpServer raise @sw_router.AddRouteError
+
+// Errors
+
+// Types and methods
+type HttpMethod derive(Eq, Hash, @debug.Debug)
+pub impl Show for HttpMethod
+
+type HttpServer
+pub fn HttpServer::all(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::checkout(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::close(Self) -> Unit raise
+pub fn HttpServer::connect(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::copy(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::delete(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::get(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::head(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::listen(Self, String, UInt16) -> Unit raise Failure
+pub fn HttpServer::lock(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::merge(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::mkactivity(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::mkcol(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::move_(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::msearch(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::notify(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::options(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::patch(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::poll(Self) -> Unit raise
+pub fn HttpServer::post(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::propfind(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::proppatch(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::purge(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::put(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::report(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::search(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::serve_forever(Self) -> Unit
+pub fn HttpServer::subscribe(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::trace(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::unlock(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+pub fn HttpServer::unsubscribe(Self, String, (Request, Response) -> Unit) -> Unit raise @sw_router.AddRouteError
+
+pub(all) struct Request {
+  method_ : HttpMethod
+  path_params : Map[String, String]
+  query : Array[(String, String)]
+  fragment : String?
+  headers : Map[String, String]
+  body : Bytes
+}
+
+pub(all) struct Response {
+  status_code : Int
+  headers : Map[String, String]
+  mut body : Bytes
+}
+
+// Type aliases
+
+// Traits
+
