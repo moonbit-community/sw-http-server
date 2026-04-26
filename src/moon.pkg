@@ -1,4 +1,7 @@
 import {
+  "moonbitlang/core/buffer",
+  "moonbitlang/core/hashmap",
+  "moonbitlang/core/string",
   "ShellWen/sw_socket",
   "ShellWen/sw_router",
   "tonyfettes/encoding",

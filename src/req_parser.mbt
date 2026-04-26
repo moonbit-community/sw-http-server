@@ -92,7 +92,7 @@ fn HttpRequestParser::parse(
             let data = self.buffer.to_bytes()
             let value = @encoding.decode(data, encoding=UTF8)
             self.buffer.reset()
-            if not(self.current_header_name.is_empty()) {
+            if self.current_header_name is Some(_) {
               let name = self.current_header_name.unwrap()
               self.headers.set(name, value)
               self.current_header_name = None
@@ -115,7 +115,7 @@ fn HttpRequestParser::parse(
         self.current_header_name = Some(name)
         self.buffer.reset()
         self.is_parsing_header_name = false
-      } else if not(self.is_parsing_header_name) &&
+      } else if !self.is_parsing_header_name &&
         byte == b' ' &&
         self.buffer.length() == 0 {
         // skip space after header name

@@ -1,6 +1,8 @@
 {
   "name": "ShellWen/sw_http_server",
   "version": "0.1.0",
+  "preferred-target": "native",
+  "supported-targets": "native",
   "deps": {
     "ShellWen/sw_socket": "0.2.0",
     "ShellWen/sw_router": "0.2.0",
